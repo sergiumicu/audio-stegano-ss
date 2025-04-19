@@ -24,13 +24,19 @@ function data=recover_signal_steg(prn, y, window_type, attempt_truncation)
     % find datapoint strength and detect if there's no more data
     data = [];
 
-    for i=1:length(prn):length(y)
-        if i > 1 && 0.1*abs(data(end)) < abs(r(i))
+    if attempt_truncation
+        for i=1:length(prn):length(y)
+            if i > 1 && 0.1*abs(data(end)) < abs(r(i))
+                data = [data r(i)];
+            elseif i == 1
+                data = [data r(i)];
+            else
+                break
+            end
+        end
+    else
+        for i=1:length(prn):length(y)
             data = [data r(i)];
-        elseif i == 1
-            data = [data r(i)];
-        else
-            break
         end
     end
 end

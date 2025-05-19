@@ -9,4 +9,11 @@ function ascii=nrz2ascii(nrz)
         lett = bin2dec(lett);
         ascii = [ascii char(lett)];
     end
+
+    pos = strfind(ascii, '\');
+
+    for k=pos
+        ascii = ascii(1:k-1);
+        return;
+    end
 end

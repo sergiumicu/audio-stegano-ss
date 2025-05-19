@@ -3,8 +3,7 @@ function nrz=ascii2nrz(inpstr)
     inpstr = char(inpstr);
     inpstr = double(inpstr);
     inpstr = dec2bin(inpstr);
-    insptr = string(inpstr);
-    inpstr = strjoin(insptr,'');
+    inpstr = reshape(inpstr', 1, []);
     inpstr = char(inpstr);
 
     for i=1:length(inpstr)

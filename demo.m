@@ -1,15 +1,18 @@
-[x, sr] = load_audio('demo_audio/lofi.mp3');
-datarate = 5;   % bits per second 
-prnlength = 5;  
+[x, sr] = load_audio('demo_audio/flute.mp3');
+x = x(sr:end);
 
-[ext_prn, prn] = make_extended_prn(prnlength, datarate, sr);
+datarate = 10;   % bits per second 
+prnlength = sr/datarate;  
+A = 0.01;
 
-signal_spread = make_signal_steg(ext_prn, ascii2nrz("Hello world!"));
+prn = make_prn(prnlength);
 
+strotencode = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit\';
+
+signal_spread = make_signal_steg(prn, ascii2nrz(strotencode));
 y = x';
-y(1:length(signal_spread)) = y(1:length(signal_spread)) + .004*signal_spread;
+y(1:length(signal_spread)) = y(1:length(signal_spread)) + A*signal_spread;
+y(length(signal_spread)+1:end) = y(length(signal_spread)+1:end) + A*randn(1, length(x) - length(signal_spread));
 
-recovered_data = recover_signal_steg(ext_prn, y, "hanning", true);
-stem(recovered_data);
-
-nrz2ascii(recovered_data)
+recovered_data = recover_signal_steg(prn, y);
+recovered_str = nrz2ascii(recovered_data)
